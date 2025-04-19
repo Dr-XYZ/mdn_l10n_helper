@@ -169,17 +169,17 @@ export default function ComparePage() {
                     Read Changes <br />
                     <small>from localStorage</small>
                 </button>
-                <div className="flex items-center ml-4">
-                    <label className="font-bold mr-2">Line Split:</label>
-                    <select
-                        className="rounded border px-2 py-1"
-                        value={splitMethod}
-                        onChange={e => setSplitMethod(e.target.value as 'double' | 'single')}
-                    >
-                        <option value="double">Double (\n\n)</option>
-                        <option value="single">Single (\n)</option>
-                    </select>
-                </div>
+                <label className="font-bold ml-4" htmlFor="split-method-select">Line Split:</label>
+                <select
+                    id="split-method-select"
+                    className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
+                    style={{height: '44px'}} // match button height
+                    value={splitMethod}
+                    onChange={e => setSplitMethod(e.target.value as 'double' | 'single')}
+                >
+                    <option value="double">Double (\n\n)</option>
+                    <option value="single">Single (\n)</option>
+                </select>
             </div>
 
             {l10nedEntry && sourceEntry && locale && (
