@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Entry from '@models/entry';
 
 export default function CompareContent({
