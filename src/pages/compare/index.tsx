@@ -175,10 +175,14 @@ export default function ComparePage() {
                     value={splitMethod}
                     onChange={e => setSplitMethod(e.target.value as 'double' | 'single')}
                 >
-                    <option value="double">Line Split: <br />
-                        Double (\n\n)</option>
-                    <option value="single">Line Split: <br />
-                        Single (\n)</option>
+                    <option value="double">
+                        Line Split Method: <br />
+                        <small>Double (\n\n)</small>
+                    </option>
+                    <option value="single">
+                        Line Split: <br />
+                        <small>Single (\n)</small>
+                        </option>
                 </select>
             </div>
 
