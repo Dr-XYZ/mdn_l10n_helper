@@ -40,10 +40,15 @@ export default function CompareContent({
             </section>
             <section>
                 {Array.from({ length: maxLength }).map((_, i) => (
-                    <div key={i} className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
-                        <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
-                    </div>
+                    <>
+                        <div key={i} className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700">
+                            <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
+                            <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
+                        </div>
+                        {splitMethod === 'double' && i < maxLength - 1 && (
+                            <div className="text-center text-gray-400 select-none">\n</div>
+                        )}
+                    </>
                 ))}
             </section>
         </>
