@@ -11,16 +11,14 @@ export default function CompareContent({
     sourceEntry: Entry | null | undefined;
     locale: string;
 }) {
-    const [splitMethod, setSplitMethod] = useState<'double' | 'single' | 'custom'>('double');
-    const [customRegex, setCustomRegex] = useState('');
+    const [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double');
 
     if (!l10nedEntry || !sourceEntry) {
         return <div>Entries are not available for comparison.</div>;
     }
 
-    let splitter: RegExp | string = '\n\n';
+    let splitter: string = '\n\n';
     if (splitMethod === 'single') splitter = '\n';
-    else if (splitMethod === 'custom' && customRegex) splitter = new RegExp(customRegex);
 
     const l10nedLines = l10nedEntry.content.split(splitter);
     const sourceLines = sourceEntry.content.split(splitter);
@@ -49,17 +47,7 @@ export default function CompareContent({
                 >
                     <option value="double">Double Line Break (\\n\\n)</option>
                     <option value="single">Single Line Break (\\n)</option>
-                    <option value="custom">Custom Regex</option>
                 </select>
-                {splitMethod === 'custom' && (
-                    <input
-                        className="rounded border px-2 py-1 font-mono"
-                        type="text"
-                        placeholder="Enter regex, e.g. \\n{2,}"
-                        value={customRegex}
-                        onChange={e => setCustomRegex(e.target.value)}
-                    />
-                )}
             </section>
             <section>
                 {Array.from({ length: maxLength }).map((_, i) => (
