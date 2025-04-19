@@ -1,18 +1,18 @@
-import { useState } from 'react';
 import Entry from '@models/entry';
 
+interface DiffReviewProps {
+    l10nedEntry: Entry | null | undefined;
+    sourceEntry: Entry | null | undefined;
+    locale: string;
+    splitMethod: 'double' | 'single';
+}
 
 export default function CompareContent({
     l10nedEntry,
     sourceEntry,
     locale,
-}: {
-    l10nedEntry: Entry | null | undefined;
-    sourceEntry: Entry | null | undefined;
-    locale: string;
-}) {
-    const [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double');
-
+    splitMethod,
+}: DiffReviewProps) {
     if (!l10nedEntry || !sourceEntry) {
         return <div>Entries are not available for comparison.</div>;
     }
@@ -37,17 +37,6 @@ export default function CompareContent({
                     <h2 className="text-2xl font-bold">Source</h2>
                     <SourceEntryProperties entry={sourceEntry} />
                 </div>
-            </section>
-            <section className="mb-4 flex items-center space-x-4">
-                <label className="font-bold">Line Split Method:</label>
-                <select
-                    className="rounded border px-2 py-1"
-                    value={splitMethod}
-                    onChange={e => setSplitMethod(e.target.value as any)}
-                >
-                    <option value="double">Double Line Break (\\n\\n)</option>
-                    <option value="single">Single Line Break (\\n)</option>
-                </select>
             </section>
             <section>
                 {Array.from({ length: maxLength }).map((_, i) => (

@@ -19,7 +19,8 @@ export default function ComparePage() {
         [l10nBranch, setL10nBranch] = useState<string | undefined>(branch ?? undefined),
         [l10nedEntry, setL10nedEntry] = useState<Entry | null | undefined>(),
         [sourceEntry, setSourceEntry] = useState<Entry | null | undefined>(),
-        [loading, setLoading] = useState(false);
+        [loading, setLoading] = useState(false),
+        [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double');
 
     const { setMessage } = useContext(BannerContext);
     const { preferences } = usePreferences();
@@ -147,7 +148,7 @@ export default function ComparePage() {
                     />
                 </div>
             </div>
-            <div className="my-4 flex space-x-1">
+            <div className="my-4 flex space-x-1 items-center">
                 <button
                     className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
                     onClick={fetchEntries}
@@ -168,10 +169,19 @@ export default function ComparePage() {
                     Read Changes <br />
                     <small>from localStorage</small>
                 </button>
+                <label className="ml-4 font-bold">Line Split Method:</label>
+                <select
+                    className="rounded border px-2 py-1"
+                    value={splitMethod}
+                    onChange={e => setSplitMethod(e.target.value as 'double' | 'single')}
+                >
+                    <option value="double">Double Line Break (\n\n)</option>
+                    <option value="single">Single Line Break (\n)</option>
+                </select>
             </div>
 
             {l10nedEntry && sourceEntry && locale && (
-                <DiffReview l10nedEntry={l10nedEntry} sourceEntry={sourceEntry} locale={locale} />
+                <DiffReview l10nedEntry={l10nedEntry} sourceEntry={sourceEntry} locale={locale} splitMethod={splitMethod} />
             )}
 
             {loading && <Spinner />}
