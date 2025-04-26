@@ -15,8 +15,26 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
 
     let splitter: string = splitMethod === 'single' ? '\n' : '\n\n';
 
-    const l10nedLines = l10nedEntry.content.split(splitter);
-    const sourceLines = sourceEntry.content.split(splitter);
+    const processMarkdownList = (content: string) => {
+        return content
+            .split(splitter)
+            .reduce((acc: string[], line: string) => {
+                const trimmedLine = line.trimStart();
+                if (trimmedLine.startsWith('- ')) {
+                    if (acc.length > 0 && acc[acc.length - 1].trimStart().startsWith('- ')) {
+                        acc[acc.length - 1] += ` ${trimmedLine.slice(2)}`;
+                    } else {
+                        acc.push(trimmedLine);
+                    }
+                } else {
+                    acc.push(line);
+                }
+                return acc;
+            }, []);
+    };
+
+    const l10nedLines = processMarkdownList(l10nedEntry.content);
+    const sourceLines = processMarkdownList(sourceEntry.content);
     const maxLength = Math.max(l10nedLines.length, sourceLines.length);
 
     return (
