@@ -45,7 +45,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             </section>
             <section>
                 {Array.from({ length: maxLength }).flatMap((_, i) => {
-                    const isMarkdownListItem = (line: string) => line.trimStart().startsWith('- ');
+                    const isMarkdownListItem = (line: string) => line.trim().startsWith('- ');
 
                     const currentIsMarkdown = isMarkdownListItem(l10nedLines[i] || '') || isMarkdownListItem(sourceLines[i] || '');
                     const nextIsMarkdown = i + 1 < maxLength && (isMarkdownListItem(l10nedLines[i + 1] || '') || isMarkdownListItem(sourceLines[i + 1] || ''));
