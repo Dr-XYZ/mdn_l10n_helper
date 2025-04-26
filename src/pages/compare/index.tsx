@@ -20,7 +20,8 @@ export default function ComparePage() {
         [l10nedEntry, setL10nedEntry] = useState<Entry | null | undefined>(),
         [sourceEntry, setSourceEntry] = useState<Entry | null | undefined>(),
         [loading, setLoading] = useState(false),
-        [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double');
+        [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double'),
+        [enableMarkdownProcessing, setEnableMarkdownProcessing] = useState(true);
 
     const { setMessage } = useContext(BannerContext);
     const { preferences } = usePreferences();
@@ -178,6 +179,17 @@ export default function ComparePage() {
                     <option value="double">Split Method: Double(\n\n)</option>
                     <option value="single">Split Method: Single(\n)</option>
                 </select>
+                {splitMethod === 'double' && (
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={enableMarkdownProcessing}
+                            onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
+                            className="rounded border-amber-400 bg-transparent hover:bg-amber-100 dark:hover:bg-amber-900"
+                        />
+                        <span>Enable Markdown Processing (Special handling for list items starting with '- ')</span>
+                    </label>
+                )}
             </div>
 
             {l10nedEntry && sourceEntry && locale && (
