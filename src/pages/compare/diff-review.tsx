@@ -6,9 +6,10 @@ interface DiffReviewProps {
     locale: string;
     splitMethod: 'double' | 'single';
     path: string | null;
+    enableMarkdownProcessing: boolean;
 }
 
-export default function CompareContent({ l10nedEntry, sourceEntry, locale, splitMethod, path }: DiffReviewProps) {
+export default function CompareContent({ l10nedEntry, sourceEntry, locale, splitMethod, path, enableMarkdownProcessing }: DiffReviewProps) {
     if (!l10nedEntry || !sourceEntry) {
         return <div>Entries are not available for comparison.</div>;
     }
@@ -16,6 +17,9 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
     let splitter: string = splitMethod === 'single' ? '\n' : '\n\n';
 
     const processMarkdownList = (content: string) => {
+        if (!enableMarkdownProcessing) {
+            return content.split(splitter);
+        }
         return content
             .split(splitter)
             .flatMap((block) => {
