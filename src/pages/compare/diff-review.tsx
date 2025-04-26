@@ -47,19 +47,18 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                 {Array.from({ length: maxLength }).flatMap((_, i) => {
                     const isMarkdownListItem = (line: string) => line.trimStart().startsWith('- ');
 
+                    const currentIsMarkdown = isMarkdownListItem(l10nedLines[i] || '') || isMarkdownListItem(sourceLines[i] || '');
+                    const nextIsMarkdown = i + 1 < maxLength && (isMarkdownListItem(l10nedLines[i + 1] || '') || isMarkdownListItem(sourceLines[i + 1] || ''));
+
                     return [
                         <div
                             key={i}
-                            className={`flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700 ${
-                                isMarkdownListItem(l10nedLines[i] || '') || isMarkdownListItem(sourceLines[i] || '')
-                                    ? 'mb-0'
-                                    : ''
-                            }`}
+                            className={`flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700`}
                         >
                             <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
                             <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
                         </div>,
-                        splitMethod === 'double' && i < maxLength - 1 && !isMarkdownListItem(l10nedLines[i] || '')
+                        splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)
                             ? <div key={`spacer-${i}`} className="h-4" />
                             : null,
                     ];
