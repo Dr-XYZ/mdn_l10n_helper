@@ -21,7 +21,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             .flatMap((block) => {
                 return block
                     .split(/\n(?=\s*- )/)
-                    .map((line) => line.trimStart());
+                    .map((line) => line);
             });
     };
 
