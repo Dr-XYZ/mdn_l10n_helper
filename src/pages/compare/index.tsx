@@ -200,6 +200,7 @@ export default function ComparePage() {
                     locale={locale}
                     splitMethod={splitMethod}
                     path={path}
+                    enableMarkdownProcessing={enableMarkdownProcessing}
                 />
             )}
 
