@@ -44,16 +44,26 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                 </div>
             </section>
             <section>
-                {Array.from({ length: maxLength }).flatMap((_, i) => [
-                    <div
-                        key={i}
-                        className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
-                    >
-                        <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
-                        <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
-                    </div>,
-                    splitMethod === 'double' && i < maxLength - 1 ? <div key={`spacer-${i}`} className="h-4" /> : null,
-                ])}
+                {Array.from({ length: maxLength }).flatMap((_, i) => {
+                    const isMarkdownListItem = (line: string) => line.trimStart().startsWith('- ');
+
+                    return [
+                        <div
+                            key={i}
+                            className={`flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700 ${
+                                isMarkdownListItem(l10nedLines[i] || '') || isMarkdownListItem(sourceLines[i] || '')
+                                    ? 'mb-0'
+                                    : ''
+                            }`}
+                        >
+                            <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
+                            <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
+                        </div>,
+                        splitMethod === 'double' && i < maxLength - 1 && !isMarkdownListItem(l10nedLines[i] || '')
+                            ? <div key={`spacer-${i}`} className="h-4" />
+                            : null,
+                    ];
+                })}
             </section>
         </>
     );
