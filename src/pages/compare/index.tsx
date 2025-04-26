@@ -187,7 +187,7 @@ export default function ComparePage() {
                             onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
                             className="mr-2"
                         />
-                        <span>Enable Markdown Processing (Special handling for list items starting with '- ')</span>
+                        <span>Split MD List</span>
                     </label>
                 )}
             </div>
