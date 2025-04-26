@@ -180,12 +180,12 @@ export default function ComparePage() {
                     <option value="single">Split Method: Single(\n)</option>
                 </select>
                 {splitMethod === 'double' && (
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900">
                         <input
                             type="checkbox"
                             checked={enableMarkdownProcessing}
                             onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
-                            className="rounded border-amber-400 bg-transparent hover:bg-amber-100 dark:hover:bg-amber-900"
+                            className="mr-2"
                         />
                         <span>Enable Markdown Processing (Special handling for list items starting with '- ')</span>
                     </label>
