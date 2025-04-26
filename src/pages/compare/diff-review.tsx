@@ -18,19 +18,11 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
     const processMarkdownList = (content: string) => {
         return content
             .split(splitter)
-            .reduce((acc: string[], line: string) => {
-                const trimmedLine = line.trimStart();
-                if (trimmedLine.startsWith('- ')) {
-                    if (acc.length > 0 && acc[acc.length - 1].trimStart().startsWith('- ')) {
-                        acc[acc.length - 1] += ` ${trimmedLine.slice(2)}`;
-                    } else {
-                        acc.push(trimmedLine);
-                    }
-                } else {
-                    acc.push(line);
-                }
-                return acc;
-            }, []);
+            .flatMap((block) => {
+                return block
+                    .split(/\n(?=\s*- )/)
+                    .map((line) => line.trimStart());
+            });
     };
 
     const l10nedLines = processMarkdownList(l10nedEntry.content);
