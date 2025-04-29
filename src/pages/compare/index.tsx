@@ -20,8 +20,13 @@ export default function ComparePage() {
         [l10nedEntry, setL10nedEntry] = useState<Entry | null | undefined>(),
         [sourceEntry, setSourceEntry] = useState<Entry | null | undefined>(),
         [loading, setLoading] = useState(false),
-        [splitMethod, setSplitMethod] = useState<'double' | 'single'>('double'),
-        [enableMarkdownProcessing, setEnableMarkdownProcessing] = useState(true);
+        [splitMethod, setSplitMethod] = useState<'double' | 'single'>(
+            localStorage.getItem('splitMode') === 'true' ? 'double' : 'single'
+        ),
+        [enableMarkdownProcessing, setEnableMarkdownProcessing] = useState(
+            localStorage.getItem('mdListProcessOption') === 'true'
+        ),
+        [settingsVisible, setSettingsVisible] = useState(false);
 
     const { setMessage } = useContext(BannerContext);
     const { preferences } = usePreferences();
@@ -170,27 +175,44 @@ export default function ComparePage() {
                     Read Changes <br />
                     <small>from localStorage</small>
                 </button>
-                <select
-                    id="split-method-select"
+                <button
                     className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
-                    value={splitMethod}
-                    onChange={(e) => setSplitMethod(e.target.value as 'double' | 'single')}
+                    onClick={() => setSettingsVisible(!settingsVisible)}
                 >
-                    <option value="double">Split Method: Double(\n\n)</option>
-                    <option value="single">Split Method: Single(\n)</option>
-                </select>
-                {splitMethod === 'double' && (
-                    <label className="flex items-center space-x-2 rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900">
-                        <input
-                            type="checkbox"
-                            checked={enableMarkdownProcessing}
-                            onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
-                            className="mr-2"
-                        />
-                        <span>Split MD List</span>
-                    </label>
-                )}
+                    {settingsVisible ? 'Hide Settings' : 'Show Settings'}
+                </button>
             </div>
+
+            {settingsVisible && (
+                <div className="my-4 rounded border-2 border-amber-400 p-4">
+                    <h2 className="mb-2 text-2xl font-bold">Settings</h2>
+                    <div className="mb-4">
+                        <label className="block font-medium text-gray-700 dark:text-gray-200">
+                            Split Method
+                        </label>
+                        <select
+                            id="split-method-select"
+                            className="w-full rounded border-2 border-amber-400 bg-transparent px-4 py-1.5"
+                            value={splitMethod}
+                            onChange={(e) => setSplitMethod(e.target.value as 'double' | 'single')}
+                        >
+                            <option value="double">Double (\n\n)</option>
+                            <option value="single">Single (\n)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                checked={enableMarkdownProcessing}
+                                onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
+                                className="mr-2"
+                            />
+                            <span>Enable Markdown List Processing</span>
+                        </label>
+                    </div>
+                </div>
+            )}
 
             {l10nedEntry && sourceEntry && locale && (
                 <DiffReview
