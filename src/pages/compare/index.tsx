@@ -198,7 +198,7 @@ export default function ComparePage() {
                     className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
                     onClick={openSettings}
                 >
-                    Open Settings
+                    Settings
                 </button>
             </div>
 
