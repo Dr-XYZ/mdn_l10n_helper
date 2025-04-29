@@ -43,7 +43,7 @@ export default function ComparePage() {
 
     const cancelSettings = () => {
         setTempSplitMethod(splitMethod);
-        setTempEnableMarkdownProcessing(enableMarkdownProcessing); // 還原暫存值到原始值
+        setTempEnableMarkdownProcessing(enableMarkdownProcessing);
         setSettingsVisible(false);
     };
 
@@ -241,8 +241,8 @@ export default function ComparePage() {
                             <button
                                 className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
                                 onClick={() => {
-                                    setSplitMethod(tempSplitMethod); // 保存暫存值到主狀態
-                                    setEnableMarkdownProcessing(tempEnableMarkdownProcessing); // 保存暫存值到主狀態
+                                    setSplitMethod(tempSplitMethod);
+                                    setEnableMarkdownProcessing(tempEnableMarkdownProcessing);
                                     setSettingsVisible(false);
                                 }}
                             >
