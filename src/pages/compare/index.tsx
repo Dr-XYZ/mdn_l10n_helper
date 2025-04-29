@@ -177,39 +177,55 @@ export default function ComparePage() {
                 </button>
                 <button
                     className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
-                    onClick={() => setSettingsVisible(!settingsVisible)}
+                    onClick={() => setSettingsVisible(true)}
                 >
-                    {settingsVisible ? 'Hide Settings' : 'Show Settings'}
+                    Open Settings
                 </button>
             </div>
 
             {settingsVisible && (
-                <div className="my-4 rounded border-2 border-amber-400 p-4">
-                    <h2 className="mb-2 text-2xl font-bold">Settings</h2>
-                    <div className="mb-4">
-                        <label className="block font-medium text-gray-700 dark:text-gray-200">
-                            Split Method
-                        </label>
-                        <select
-                            id="split-method-select"
-                            className="w-full rounded border-2 border-amber-400 bg-transparent px-4 py-1.5"
-                            value={splitMethod}
-                            onChange={(e) => setSplitMethod(e.target.value as 'double' | 'single')}
-                        >
-                            <option value="double">Double (\n\n)</option>
-                            <option value="single">Single (\n)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="flex items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                checked={enableMarkdownProcessing}
-                                onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
-                                className="mr-2"
-                            />
-                            <span>Enable Markdown List Processing</span>
-                        </label>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="w-96 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+                        <h2 className="mb-4 text-2xl font-bold">Settings</h2>
+                        <div className="mb-4">
+                            <label className="block font-medium text-gray-700 dark:text-gray-200">
+                                Split Method
+                            </label>
+                            <select
+                                id="split-method-select"
+                                className="w-full rounded border-2 border-amber-400 bg-transparent px-4 py-1.5"
+                                value={splitMethod}
+                                onChange={(e) => setSplitMethod(e.target.value as 'double' | 'single')}
+                            >
+                                <option value="double">Double (\n\n)</option>
+                                <option value="single">Single (\n)</option>
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    checked={enableMarkdownProcessing}
+                                    onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
+                                    className="mr-2"
+                                />
+                                <span>Enable Markdown List Processing</span>
+                            </label>
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                            <button
+                                className="rounded border-2 border-gray-400 bg-transparent px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                onClick={() => setSettingsVisible(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
+                                onClick={() => setSettingsVisible(false)}
+                            >
+                                Save
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
