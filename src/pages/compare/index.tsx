@@ -21,10 +21,14 @@ export default function ComparePage() {
         [sourceEntry, setSourceEntry] = useState<Entry | null | undefined>(),
         [loading, setLoading] = useState(false),
         [splitMethod, setSplitMethod] = useState<'double' | 'single'>(
-            localStorage.getItem('splitMode') === 'true' ? 'double' : 'single'
+            localStorage.getItem('splitMode') !== null
+                ? (localStorage.getItem('splitMode') === 'true' ? 'double' : 'single')
+                : 'double'
         ),
         [enableMarkdownProcessing, setEnableMarkdownProcessing] = useState(
-            localStorage.getItem('mdListProcessOption') === 'true'
+            localStorage.getItem('mdListProcessOption') !== null
+                ? localStorage.getItem('mdListProcessOption') === 'true'
+                : true
         ),
         [settingsVisible, setSettingsVisible] = useState(false);
 
