@@ -204,7 +204,7 @@ export default function ComparePage() {
 
             {settingsVisible && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="w-96 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+                    <div className="relative w-96 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
                         <h2 className="mb-4 text-2xl font-bold">Settings</h2>
                         <div className="mb-4">
                             <label className="block font-medium text-gray-700 dark:text-gray-200">
