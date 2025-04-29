@@ -208,7 +208,7 @@ export default function ComparePage() {
                             </label>
                             <select
                                 id="split-method-select"
-                                className="w-full rounded border-2 border-amber-400 bg-transparent px-4 py-1.5"
+                                className="w-full rounded border-2 border-amber-400 bg-white text-black px-4 py-1.5 dark:bg-gray-700 dark:text-white"
                                 value={tempSplitMethod}
                                 onChange={(e) => setTempSplitMethod(e.target.value as 'double' | 'single')}
                             >
