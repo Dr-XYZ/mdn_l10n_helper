@@ -28,6 +28,21 @@ export default function ComparePage() {
         ),
         [settingsVisible, setSettingsVisible] = useState(false);
 
+    const [tempSplitMethod, setTempSplitMethod] = useState(splitMethod);
+    const [tempEnableMarkdownProcessing, setTempEnableMarkdownProcessing] = useState(enableMarkdownProcessing);
+
+    const openSettings = () => {
+        setTempSplitMethod(splitMethod);
+        setTempEnableMarkdownProcessing(enableMarkdownProcessing);
+        setSettingsVisible(true);
+    };
+
+    const cancelSettings = () => {
+        setSplitMethod(tempSplitMethod);
+        setEnableMarkdownProcessing(tempEnableMarkdownProcessing);
+        setSettingsVisible(false);
+    };
+
     const { setMessage } = useContext(BannerContext);
     const { preferences } = usePreferences();
 
@@ -177,7 +192,7 @@ export default function ComparePage() {
                 </button>
                 <button
                     className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
-                    onClick={() => setSettingsVisible(true)}
+                    onClick={openSettings}
                 >
                     Open Settings
                 </button>
@@ -194,8 +209,8 @@ export default function ComparePage() {
                             <select
                                 id="split-method-select"
                                 className="w-full rounded border-2 border-amber-400 bg-transparent px-4 py-1.5"
-                                value={splitMethod}
-                                onChange={(e) => setSplitMethod(e.target.value as 'double' | 'single')}
+                                value={tempSplitMethod}
+                                onChange={(e) => setTempSplitMethod(e.target.value as 'double' | 'single')}
                             >
                                 <option value="double">Double (\n\n)</option>
                                 <option value="single">Single (\n)</option>
@@ -205,8 +220,8 @@ export default function ComparePage() {
                             <label className="flex items-center space-x-2">
                                 <input
                                     type="checkbox"
-                                    checked={enableMarkdownProcessing}
-                                    onChange={(e) => setEnableMarkdownProcessing(e.target.checked)}
+                                    checked={tempEnableMarkdownProcessing}
+                                    onChange={(e) => setTempEnableMarkdownProcessing(e.target.checked)}
                                     className="mr-2"
                                 />
                                 <span>Enable Markdown List Processing</span>
@@ -215,13 +230,17 @@ export default function ComparePage() {
                         <div className="flex justify-end space-x-2">
                             <button
                                 className="rounded border-2 border-gray-400 bg-transparent px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                onClick={() => setSettingsVisible(false)}
+                                onClick={cancelSettings}
                             >
                                 Cancel
                             </button>
                             <button
                                 className="rounded border-2 border-amber-400 bg-transparent px-4 py-1.5 hover:bg-amber-100 dark:hover:bg-amber-900"
-                                onClick={() => setSettingsVisible(false)}
+                                onClick={() => {
+                                    setSplitMethod(tempSplitMethod);
+                                    setEnableMarkdownProcessing(tempEnableMarkdownProcessing);
+                                    setSettingsVisible(false);
+                                }}
                             >
                                 Save
                             </button>
