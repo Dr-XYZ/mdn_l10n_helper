@@ -25,14 +25,32 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             .flatMap((block) => {
                 if (splitMethod === 'double') {
                     // Preserve blockquotes (lines starting with '>') while splitting
-                    return block
-                        .split(/\n(?=\s*- )/) // Split by list items
-                        .flatMap((line) => {
-                            if (line.trim().startsWith('>')) {
-                                return [line]; // Keep blockquotes intact
+                    const lines = block.split('\n');
+                    const result: string[] = [];
+                    let currentBlock = '';
+
+                    lines.forEach((line) => {
+                        if (line.trim().startsWith('>')) {
+                            // Append blockquote lines to the current block
+                            currentBlock += (currentBlock ? '\n' : '') + line;
+                        } else if (line.trim() === '') {
+                            // On empty line, push the current block and reset
+                            if (currentBlock) {
+                                result.push(currentBlock);
+                                currentBlock = '';
                             }
-                            return line.split(/\n/); // Split other lines normally
-                        });
+                        } else {
+                            // Append normal lines to the current block
+                            currentBlock += (currentBlock ? '\n' : '') + line;
+                        }
+                    });
+
+                    // Push the last block if it exists
+                    if (currentBlock) {
+                        result.push(currentBlock);
+                    }
+
+                    return result;
                 }
                 return block.split(/\n(?=\s*- )|(?=\n>)/); // Single split mode
             });
