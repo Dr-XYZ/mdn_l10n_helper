@@ -23,9 +23,18 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
         return content
             .split(splitter)
             .flatMap((block) => {
-                return block
-                    .split(/\n(?=\s*- )/)
-                    .map((line) => line);
+                if (splitMethod === 'double') {
+                    // Preserve blockquotes (lines starting with '>') while splitting
+                    return block
+                        .split(/\n(?=\s*- )/) // Split by list items
+                        .flatMap((line) => {
+                            if (line.trim().startsWith('>')) {
+                                return [line]; // Keep blockquotes intact
+                            }
+                            return line.split(/\n/); // Split other lines normally
+                        });
+                }
+                return block.split(/\n(?=\s*- )|(?=\n>)/); // Single split mode
             });
     };
 
@@ -50,9 +59,20 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             <section>
                 {Array.from({ length: maxLength }).flatMap((_, i) => {
                     const isMarkdownListItem = (line: string) => line.trim().startsWith('- ');
+                    const isMarkdownBlockquote = (line: string) => line.trim().startsWith('>');
 
-                    const currentIsMarkdown = isMarkdownListItem(l10nedLines[i] || '') || isMarkdownListItem(sourceLines[i] || '');
-                    const nextIsMarkdown = i + 1 < maxLength && (isMarkdownListItem(l10nedLines[i + 1] || '') || isMarkdownListItem(sourceLines[i + 1] || ''));
+                    const currentIsMarkdown =
+                        isMarkdownListItem(l10nedLines[i] || '') ||
+                        isMarkdownListItem(sourceLines[i] || '') ||
+                        isMarkdownBlockquote(l10nedLines[i] || '') ||
+                        isMarkdownBlockquote(sourceLines[i] || '');
+
+                    const nextIsMarkdown =
+                        i + 1 < maxLength &&
+                        (isMarkdownListItem(l10nedLines[i + 1] || '') ||
+                            isMarkdownListItem(sourceLines[i + 1] || '') ||
+                            isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
+                            isMarkdownBlockquote(sourceLines[i + 1] || ''));
 
                     return [
                         <div
