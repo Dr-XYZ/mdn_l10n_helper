@@ -89,9 +89,6 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             </section>
             <section>
                 {Array.from({ length: maxLength }).map((_, i) => {
-                    const isMarkdownListItem = (line: string) => line.trim().startsWith('- ');
-                    const isMarkdownBlockquote = (line: string) => line.trim().startsWith('>');
-
                     const isBqSepL10n = l10nedLines[i] === '>';
                     const isBqSepSrc = sourceLines[i] === '>';
 
