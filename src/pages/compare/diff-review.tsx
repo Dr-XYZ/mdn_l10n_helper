@@ -24,24 +24,24 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
             .split(splitter)
             .flatMap((block) => {
                 if (splitMethod === 'double') {
-                    // Preserve blockquotes (lines starting with '>') while splitting
+                    // Handle blockquotes by removing '>' before splitting
                     const lines = block.split('\n');
                     const result: string[] = [];
                     let currentBlock = '';
 
                     lines.forEach((line) => {
-                        if (line.trim().startsWith('>')) {
-                            // Append blockquote lines to the current block
-                            currentBlock += (currentBlock ? '\n' : '') + line;
-                        } else if (line.trim() === '') {
+                        const isBlockquote = line.trim().startsWith('>');
+                        const processedLine = isBlockquote ? line.trim().slice(1).trim() : line;
+
+                        if (processedLine === '') {
                             // On empty line, push the current block and reset
                             if (currentBlock) {
                                 result.push(currentBlock);
                                 currentBlock = '';
                             }
                         } else {
-                            // Append normal lines to the current block
-                            currentBlock += (currentBlock ? '\n' : '') + line;
+                            // Append processed lines to the current block
+                            currentBlock += (currentBlock ? '\n' : '') + (isBlockquote ? `> ${processedLine}` : processedLine);
                         }
                     });
 
