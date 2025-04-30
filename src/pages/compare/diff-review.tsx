@@ -29,7 +29,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                     const result: string[] = [];
                     let currentBlock = '';
 
-                    lines.forEach((line) => {
+                    lines.forEach((line, idx) => {
                         const isBlockquote = line.trim().startsWith('>');
                         const processedLine = isBlockquote ? line.trim().slice(1).trim() : line;
 
@@ -42,6 +42,19 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                         } else {
                             // Append processed lines to the current block
                             currentBlock += (currentBlock ? '\n' : '') + (isBlockquote ? `> ${processedLine}` : processedLine);
+                        }
+
+                        // 若當前行與下一行都是 blockquote，則插入一個 '>' 行
+                        if (
+                            isBlockquote &&
+                            idx < lines.length - 1 &&
+                            lines[idx + 1].trim().startsWith('>')
+                        ) {
+                            if (currentBlock) {
+                                result.push(currentBlock);
+                                currentBlock = '';
+                            }
+                            result.push('>'); // 插入分隔符
                         }
                     });
 
@@ -75,30 +88,30 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                 </div>
             </section>
             <section>
-                {Array.from({ length: maxLength }).flatMap((_, i) => {
+                {Array.from({ length: maxLength }).map((_, i) => {
                     const isMarkdownListItem = (line: string) => line.trim().startsWith('- ');
                     const isMarkdownBlockquote = (line: string) => line.trim().startsWith('>');
 
-                    const currentIsMarkdown =
-                        isMarkdownListItem(l10nedLines[i] || '') ||
-                        isMarkdownListItem(sourceLines[i] || '') ||
-                        isMarkdownBlockquote(l10nedLines[i] || '') ||
-                        isMarkdownBlockquote(sourceLines[i] || '');
+                    const isBqSepL10n = l10nedLines[i] === '>';
+                    const isBqSepSrc = sourceLines[i] === '>';
 
-                    const nextIsMarkdown =
-                        i + 1 < maxLength &&
-                        (isMarkdownListItem(l10nedLines[i + 1] || '') ||
-                            isMarkdownListItem(sourceLines[i + 1] || '') ||
-                            isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
-                            isMarkdownBlockquote(sourceLines[i + 1] || ''));
+                    if (isBqSepL10n || isBqSepSrc) {
+                        return (
+                            <div
+                                key={`bq-sep-${i}`}
+                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
+                            >
+                                <div className="mr-4 w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>
+                                    {isBqSepL10n ? '>' : <>&nbsp;</>}
+                                </div>
+                                <div className="w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>
+                                    {isBqSepSrc ? '>' : <>&nbsp;</>}
+                                </div>
+                            </div>
+                        );
+                    }
 
-                    // 判斷當前與下一行都是 blockquote
-                    const isCurrentBqL10n = isMarkdownBlockquote(l10nedLines[i] || '');
-                    const isCurrentBqSrc = isMarkdownBlockquote(sourceLines[i] || '');
-                    const isNextBqL10n = i + 1 < maxLength && isMarkdownBlockquote(l10nedLines[i + 1] || '');
-                    const isNextBqSrc = i + 1 < maxLength && isMarkdownBlockquote(sourceLines[i + 1] || '');
-
-                    const row = [
+                    return (
                         <div
                             key={i}
                             className={`flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700`}
@@ -106,38 +119,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                             <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
                             <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
                         </div>
-                    ];
-
-                    // 若 l10n 是 bq 且下一行也是 bq，則在 l10n 欄插入 '>'
-                    if (splitMethod === 'double' && i < maxLength - 1 && isCurrentBqL10n && isNextBqL10n) {
-                        row.push(
-                            <div
-                                key={`bq-sep-l10n-${i}`}
-                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
-                            >
-                                <div className="mr-4 w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
-                                <div className="w-1/2" />
-                            </div>
-                        );
-                    }
-                    // 若 source 是 bq 且下一行也是 bq，則在 source 欄插入 '>'
-                    if (splitMethod === 'double' && i < maxLength - 1 && isCurrentBqSrc && isNextBqSrc) {
-                        row.push(
-                            <div
-                                key={`bq-sep-src-${i}`}
-                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
-                            >
-                                <div className="mr-4 w-1/2" />
-                                <div className="w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
-                            </div>
-                        );
-                    }
-                    if (splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)) {
-                        row.push(
-                            <div key={`spacer-${i}`} className="h-4" />
-                        );
-                    }
-                    return row;
+                    );
                 })}
             </section>
         </>
