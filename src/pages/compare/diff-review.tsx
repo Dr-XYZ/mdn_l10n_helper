@@ -92,14 +92,33 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                             isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
                             isMarkdownBlockquote(sourceLines[i + 1] || ''));
 
-                    // 新增：判斷當前與下一行都是 blockquote，則插入 '>'
-                    const isCurrentBq =
-                        isMarkdownBlockquote(l10nedLines[i] || '') ||
-                        isMarkdownBlockquote(sourceLines[i] || '');
-                    const isNextBq =
-                        i + 1 < maxLength &&
-                        (isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
-                            isMarkdownBlockquote(sourceLines[i + 1] || ''));
+                    // 判斷當前與下一行都是 blockquote
+                    const isCurrentBqL10n = isMarkdownBlockquote(l10nedLines[i] || '');
+                    const isCurrentBqSrc = isMarkdownBlockquote(sourceLines[i] || '');
+                    const isNextBqL10n = i + 1 < maxLength && isMarkdownBlockquote(l10nedLines[i + 1] || '');
+                    const isNextBqSrc = i + 1 < maxLength && isMarkdownBlockquote(sourceLines[i + 1] || '');
+
+                    const extraL10n = splitMethod === 'double' && i < maxLength - 1 && isCurrentBqL10n && isNextBqL10n
+                        ? (
+                            <div
+                                key={`bq-sep-l10n-${i}`}
+                                className="mr-4 w-1/2 flex justify-start text-gray-400"
+                                style={{ fontFamily: 'inherit' }}
+                            >
+                                {'>'}
+                            </div>
+                        ) : null;
+
+                    const extraSrc = splitMethod === 'double' && i < maxLength - 1 && isCurrentBqSrc && isNextBqSrc
+                        ? (
+                            <div
+                                key={`bq-sep-src-${i}`}
+                                className="w-1/2 flex justify-start text-gray-400"
+                                style={{ fontFamily: 'inherit' }}
+                            >
+                                {'>'}
+                            </div>
+                        ) : null;
 
                     return [
                         <div
@@ -109,9 +128,12 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                             <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
                             <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
                         </div>,
-                        // 新增：如果當前與下一行都是 blockquote，插入 '>'
-                        splitMethod === 'double' && i < maxLength - 1 && isCurrentBq && isNextBq
-                            ? <div key={`bq-sep-${i}`} className="flex justify-center text-gray-400">{'>'}</div>
+                        // 若 l10n 是 bq 且下一行也是 bq，則在 l10n 欄插入 '>'
+                        extraL10n || extraSrc
+                            ? <div key={`bq-sep-row-${i}`} className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap justify-between">
+                                {extraL10n}
+                                {extraSrc}
+                              </div>
                             : null,
                         splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)
                             ? <div key={`spacer-${i}`} className="h-4" />
