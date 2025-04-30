@@ -113,7 +113,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                         row.push(
                             <div
                                 key={`bq-sep-l10n-${i}`}
-                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap"
+                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
                             >
                                 <div className="mr-4 w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
                                 <div className="w-1/2" />
@@ -125,7 +125,7 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                         row.push(
                             <div
                                 key={`bq-sep-src-${i}`}
-                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap"
+                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700"
                             >
                                 <div className="mr-4 w-1/2" />
                                 <div className="w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
