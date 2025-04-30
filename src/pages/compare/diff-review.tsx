@@ -92,6 +92,15 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                             isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
                             isMarkdownBlockquote(sourceLines[i + 1] || ''));
 
+                    // 新增：判斷當前與下一行都是 blockquote，則插入 '>'
+                    const isCurrentBq =
+                        isMarkdownBlockquote(l10nedLines[i] || '') ||
+                        isMarkdownBlockquote(sourceLines[i] || '');
+                    const isNextBq =
+                        i + 1 < maxLength &&
+                        (isMarkdownBlockquote(l10nedLines[i + 1] || '') ||
+                            isMarkdownBlockquote(sourceLines[i + 1] || ''));
+
                     return [
                         <div
                             key={i}
@@ -100,6 +109,10 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                             <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
                             <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
                         </div>,
+                        // 新增：如果當前與下一行都是 blockquote，插入 '>'
+                        splitMethod === 'double' && i < maxLength - 1 && isCurrentBq && isNextBq
+                            ? <div key={`bq-sep-${i}`} className="flex justify-center text-gray-400">{'>'}</div>
+                            : null,
                         splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)
                             ? <div key={`spacer-${i}`} className="h-4" />
                             : null,
