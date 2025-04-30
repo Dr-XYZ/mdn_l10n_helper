@@ -98,47 +98,46 @@ export default function CompareContent({ l10nedEntry, sourceEntry, locale, split
                     const isNextBqL10n = i + 1 < maxLength && isMarkdownBlockquote(l10nedLines[i + 1] || '');
                     const isNextBqSrc = i + 1 < maxLength && isMarkdownBlockquote(sourceLines[i + 1] || '');
 
-                    const extraL10n = splitMethod === 'double' && i < maxLength - 1 && isCurrentBqL10n && isNextBqL10n
-                        ? (
-                            <div
-                                key={`bq-sep-l10n-${i}`}
-                                className="mr-4 w-1/2 flex justify-start text-gray-400"
-                                style={{ fontFamily: 'inherit' }}
-                            >
-                                {'>'}
-                            </div>
-                        ) : null;
-
-                    const extraSrc = splitMethod === 'double' && i < maxLength - 1 && isCurrentBqSrc && isNextBqSrc
-                        ? (
-                            <div
-                                key={`bq-sep-src-${i}`}
-                                className="w-1/2 flex justify-start text-gray-400"
-                                style={{ fontFamily: 'inherit' }}
-                            >
-                                {'>'}
-                            </div>
-                        ) : null;
-
-                    return [
+                    const row = [
                         <div
                             key={i}
                             className={`flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap hover:bg-gray-200 dark:hover:bg-gray-700`}
                         >
                             <div className="mr-4 w-1/2">{l10nedLines[i] || <>&nbsp;</>}</div>
                             <div className="w-1/2">{sourceLines[i] || <>&nbsp;</>}</div>
-                        </div>,
-                        // 若 l10n 是 bq 且下一行也是 bq，則在 l10n 欄插入 '>'
-                        extraL10n || extraSrc
-                            ? <div key={`bq-sep-row-${i}`} className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap justify-between">
-                                {extraL10n}
-                                {extraSrc}
-                              </div>
-                            : null,
-                        splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)
-                            ? <div key={`spacer-${i}`} className="h-4" />
-                            : null,
+                        </div>
                     ];
+
+                    // 若 l10n 是 bq 且下一行也是 bq，則在 l10n 欄插入 '>'
+                    if (splitMethod === 'double' && i < maxLength - 1 && isCurrentBqL10n && isNextBqL10n) {
+                        row.push(
+                            <div
+                                key={`bq-sep-l10n-${i}`}
+                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap"
+                            >
+                                <div className="mr-4 w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
+                                <div className="w-1/2" />
+                            </div>
+                        );
+                    }
+                    // 若 source 是 bq 且下一行也是 bq，則在 source 欄插入 '>'
+                    if (splitMethod === 'double' && i < maxLength - 1 && isCurrentBqSrc && isNextBqSrc) {
+                        row.push(
+                            <div
+                                key={`bq-sep-src-${i}`}
+                                className="flex rounded px-4 py-1 font-mono break-all whitespace-pre-wrap"
+                            >
+                                <div className="mr-4 w-1/2" />
+                                <div className="w-1/2 flex justify-start text-gray-400" style={{ fontFamily: 'inherit' }}>{'>'}</div>
+                            </div>
+                        );
+                    }
+                    if (splitMethod === 'double' && i < maxLength - 1 && (!currentIsMarkdown || !nextIsMarkdown)) {
+                        row.push(
+                            <div key={`spacer-${i}`} className="h-4" />
+                        );
+                    }
+                    return row;
                 })}
             </section>
         </>
